@@ -18,8 +18,14 @@
     h1 { margin: 0 0 8px; font-size: clamp(2rem, 7vw, 4rem); letter-spacing: -.06em; }
     .lead { color: #5a554d; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; margin-top: 26px; }
-    .card { min-height: 190px; padding: 24px; border: 3px solid #202020; border-radius: 18px; background: #fffdfa; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease; }
-    .card:hover, .card:focus-visible, .card.is-selected { outline: 3px solid #202020; outline-offset: 4px; }
+    .card { top: 0; min-height: 190px; padding: 24px; border: 3px solid #202020; border-radius: 18px; background: #fffdfa; cursor: pointer; transition: top .15s ease; -webkit-tap-highlight-color: transparent; }
+    .card:hover, .card:focus-visible, .card.is-selected { top: -6px; outline: none; }
+    .card:active { top: -3px; }
+    @media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+    .code-editor { display: block; width: 100%; min-height: 230px; margin-top: 16px; padding: 18px; resize: vertical; border: 1px solid #777; border-radius: 10px; background: #101010; color: #d9f7d2; font: .9rem/1.65 ui-monospace, Consolas, monospace; tab-size: 2; }
+    .editor-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+    .editor-actions button, .copy-text-code { padding: 10px 16px; border: 1px solid currentColor; border-radius: 8px; cursor: pointer; font: inherit; }
+    .editor-status { font-size: .9rem; }
     .image-demo { margin-top: 36px; padding: 28px; background: #adff00; isolation: isolate; border-radius: 18px; }
     .image-demo img { width: 320px; }
     .text-demo { margin-top: 36px; padding: 24px; border-radius: 18px; background: #89cdf2; }
@@ -74,7 +80,8 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 16H8V7h11v14Z"/></svg>
         </button>
       </div>
-      <pre id="code-example"><code></code></pre>
+      <textarea id="code-example" class="code-editor" aria-label="カードのjQueryコード" spellcheck="false"></textarea>
+      <div class="editor-actions"><button type="button" class="run-code">変更を試す</button><span class="editor-status" role="status"></span></div>
     </section>
     <section class="text-demo">
       <h2>文字の輪郭にも</h2>
@@ -108,9 +115,12 @@
     function showExample(key) {
       var example = examples[key];
       $('#example-title').text(example.title);
-      $('#code-example code').text(example.code);
+      $('#code-example').val(example.code);
+      activeExample = key;
+      $('.example .editor-status').text('コードを書き換えて「変更を試す」を押してください。');
       $('.card').removeClass('is-selected');
       $('.card[data-example="' + key + '"]').addClass('is-selected');
+      $('.card').attr('aria-pressed', 'false').filter('[data-example="' + key + '"]').attr('aria-pressed', 'true');
     }
 
     $('.card').on('click', function () { showExample($(this).data('example')); })
@@ -120,20 +130,54 @@
 
     $('.copy-code-button, .copy-text-code').on('click', function () {
       var button = this;
-      var code = $(this).hasClass('copy-text-code') ? $('.text-demo pre code').text() : $('#code-example code').text();
+      var code = $(this).closest('section').find('.code-editor').val();
       function copied() {
         button.setAttribute('aria-label', 'コピーしました');
         button.title = 'コピーしました';
         setTimeout(function () { button.setAttribute('aria-label', 'コードをコピー'); button.title = 'コードをコピー'; }, 1600);
       }
       if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(code).then(copied);
+        navigator.clipboard.writeText(code).then(copied).catch(function () { $(button).closest('section').find('.editor-status').text('コピーできませんでした。コードを選択してコピーしてください。'); });
       } else {
         var area = document.createElement('textarea');
         area.value = code; document.body.appendChild(area); area.select(); document.execCommand('copy'); area.remove(); copied();
       }
     });
 
+    var activeExample = 'coral';
+    $('.example').insertAfter('.grid');
+    $('#code-example').on('input', function () { examples[activeExample].code = this.value; });
+    $('.image-demo, .text-demo').each(function () {
+      var section = $(this);
+      var pre = section.find('pre');
+      $('<textarea class="code-editor" spellcheck="false"></textarea>').attr('aria-label', section.find('h2').text() + 'のjQueryコード').val(pre.text()).replaceAll(pre);
+      var actions = $('<div class="editor-actions"><button type="button" class="run-code">変更を試す</button><span class="editor-status" role="status"></span></div>').appendTo(section);
+      if (section.find('.copy-text-code').length) { section.find('.copy-text-code').appendTo(actions); }
+      else { $('.example .copy-code-button').clone(true).appendTo(actions); }
+    });
+    // Accept one hatching call with string options, without executing arbitrary JavaScript.
+    $('.run-code').on('click', function () {
+      var section = $(this).closest('section');
+      var status = section.find('.editor-status');
+      try {
+        var code = section.find('.code-editor').val();
+        var call = code.match(/^\s*\$\(\s*(['"])(\.[\w-]+)\1\s*\)\.hatching\(\s*\{([\s\S]*)\}\s*\)\s*;?\s*$/);
+        var expected = section.hasClass('image-demo') ? '.hatch-image' : section.hasClass('text-demo') ? '.hatch-title' : { coral: '.hatch-a', sky: '.hatch-b', lemon: '.hatch-c' }[activeExample];
+        if (!call || call[2] !== expected) { throw new Error('対象のセレクターは ' + expected + ' のまま、設定値を書き換えてください。'); }
+        var options = {}, remaining = call[3].trim();
+        var allowed = { color: 'color', width: 'width', gap: 'width', angle: null, offsetX: 'left', offsetY: 'top', gradientOverlay: 'background-image', mode: null };
+        while (remaining) {
+          var item = remaining.match(/^\s*([a-zA-Z]+)\s*:\s*(['"])((?:\\.|(?!\2)[^\\])*)\2\s*(,|$)/);
+          if (!item || !Object.prototype.hasOwnProperty.call(allowed, item[1])) { throw new Error('設定名と引用符付きの値を確認してください。例: gap: \'6px\''); }
+          var key = item[1], value = item[3];
+          if (key === 'mode' ? !/^(box|text)$/.test(value) : key === 'angle' ? !/^-?(?:\d*\.)?\d+(deg|rad|turn|grad)$/.test(value) : value && !CSS.supports(allowed[key], value)) { throw new Error(key + ' の値を確認してください。'); }
+          options[key] = value;
+          remaining = remaining.slice(item[0].length).trim();
+        }
+        $(expected).hatching(options);
+        status.text('反映しました。');
+      } catch (error) { status.text(error.message); }
+    });
     showExample('coral');
     $('#toggle').on('click', function () { $('.hatching-source').toggleClass('hatching-disabled'); });
   </script>
