@@ -30,3 +30,21 @@
 .hatching-source.hatching-disabled::before {
   display: none;
 }
+
+/* A transparent wrapper groups the image and its masked shadow together. */
+.hatching-image.hatching-source {
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+  isolation: isolate;
+}
+.hatching-image > img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.hatching-image::before {
+  -webkit-mask: var(--hatching-image) center / 100% 100% no-repeat;
+  mask: var(--hatching-image) center / 100% 100% no-repeat;
+  mask-mode: alpha;
+}

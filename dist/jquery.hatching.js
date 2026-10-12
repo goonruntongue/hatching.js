@@ -9,12 +9,26 @@
   var variables = ['--hatching-color', '--hatching-width', '--hatching-gap', '--hatching-angle', '--hatching-gradient', '--hatching-offset-x', '--hatching-offset-y', '--hatching-border-top', '--hatching-border-right', '--hatching-border-bottom', '--hatching-border-left'];
 
   function Hatching(element, options) {
+    this.target = element;
+    this.image = element.tagName === 'IMG' ? element : null;
+    if (this.image) {
+      var wrapper = document.createElement('span');
+      wrapper.className = 'hatching-image';
+      element.parentNode.insertBefore(wrapper, element);
+      wrapper.appendChild(element);
+      element = wrapper;
+    }
     this.$element = $(element);
     this.element = element;
     this.options = $.extend({}, defaults, options);
     this.original = { position: element.style.position, zIndex: element.style.zIndex, overflow: element.style.overflow, variables: {} };
     this.observer = null;
     this.init();
+    if (this.image) {
+      var self = this;
+      this.onLoad = function () { self.render(); };
+      this.image.addEventListener('load', this.onLoad);
+    }
   }
 
   Hatching.prototype.init = function () {
@@ -49,6 +63,9 @@
       '--hatching-border-left': style.borderLeftWidth
     };
     Object.keys(values).forEach(function (name) { this.element.style.setProperty(name, values[name]); }, this);
+    if (this.image) {
+      this.element.style.setProperty('--hatching-image', 'url(' + JSON.stringify(this.image.currentSrc || this.image.src) + ')');
+    }
   };
 
   Hatching.prototype.option = function (options) {
@@ -71,6 +88,12 @@
     this.element.style.overflow = this.original.overflow;
     variables.forEach(function (name) { self.element.style.setProperty(name, self.original.variables[name]); });
     this.$element.removeData(dataKey);
+    if (this.image) {
+      this.image.removeEventListener('load', this.onLoad);
+      this.element.parentNode.insertBefore(this.image, this.element);
+      this.element.remove();
+    }
+    $(this.target).removeData(dataKey);
   };
 
   $.fn[pluginName] = function (option) {
