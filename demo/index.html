@@ -7,36 +7,107 @@
   <link rel="stylesheet" href="../dist/jquery.hatching.css">
   <style>
     * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 32px; background: #f3efe8; color: #202020; font-family: system-ui, sans-serif; }
-    main { width: min(900px, 100%); }
+    body { margin: 0; min-height: 100vh; padding: 32px; background: #f3efe8; color: #202020; font-family: system-ui, sans-serif; }
+    main { width: min(900px, 100%); margin: 0 auto; }
+    .site-menu { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 30px; padding: 12px 14px 12px 20px; border: 3px solid #202020; border-radius: 14px; background: #202020; color: #fffdfa; }
+    .site-menu__links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .site-menu a { padding: 8px 11px; border: 1px solid #fffdfa; border-radius: 7px; color: inherit; font-weight: 700; font-size: .86rem; text-decoration: none; }
+    .site-menu a:hover, .site-menu a:focus-visible { background: #fffdfa; color: #202020; outline: none; }
+    .github-mark { display: block; width: 34px; aspect-ratio: 1; flex: 0 0 auto; background-color: #fff; -webkit-mask: url('github.svg') center / contain no-repeat; mask: url('github.svg') center / contain no-repeat; }
+    .github-mark.hatching-source::before { -webkit-mask: url('github.svg') center / contain no-repeat; mask: url('github.svg') center / contain no-repeat; }
     h1 { margin: 0 0 8px; font-size: clamp(2rem, 7vw, 4rem); letter-spacing: -.06em; }
-    p { color: #5a554d; }
+    .lead { color: #5a554d; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; margin-top: 26px; }
-    .card { min-height: 190px; padding: 24px; border: 3px solid #202020; border-radius: 18px; background: #fffdfa; }
-    .card h2 { margin: 0; }
-    .card p { margin-bottom: 0; }
+    .card { min-height: 190px; padding: 24px; border: 3px solid #202020; border-radius: 18px; background: #fffdfa; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease; }
+    .card:hover, .card:focus-visible, .card.is-selected { transform: translate(-3px, -3px); box-shadow: 7px 7px 0 #202020; outline: none; }
+    .card h2 { margin: 0; } .card p { margin-bottom: 0; }
     .coral { background: #ff8b73; } .sky { background: #89cdf2; } .lemon { background: #ffdc5c; }
-    button { margin-top: 28px; padding: 12px 18px; border: 2px solid #202020; border-radius: 8px; background: #fffdfa; cursor: pointer; font: inherit; font-weight: 700; }
+    .example { margin-top: 42px; padding: 22px; border: 3px solid #202020; border-radius: 18px; background: #202020; color: #fffdfa; }
+    .example__top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .example h2 { margin: 0; font-size: 1rem; }
+    .copy-code-button { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid #fffdfa; border-radius: 8px; background: transparent; color: inherit; cursor: pointer; }
+    .copy-code-button:hover, .copy-code-button:focus-visible { background: #fffdfa; color: #202020; outline: none; }
+    .copy-code-button svg { width: 19px; height: 19px; fill: currentColor; }
+    pre { margin: 16px 0 0; padding: 18px; overflow-x: auto; border-radius: 10px; background: #101010; color: #d9f7d2; font: 600 .9rem/1.65 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .controls { margin-top: 28px; }
+    .controls button { padding: 12px 18px; border: 2px solid #202020; border-radius: 8px; background: #fffdfa; cursor: pointer; font: inherit; font-weight: 700; }
+    @media (max-width: 560px) { body { padding: 18px; } .site-menu { align-items: flex-start; } .site-menu__links { flex-direction: column; } }
   </style>
 </head>
 <body>
   <main>
+    <nav class="site-menu" aria-label="プラグインメニュー">
+      <div class="site-menu__links">
+        <a href="https://github.com/goonruntongue/hatching.js" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="../dist/jquery.hatching.js" download="jquery.hatching.js">プラグインをダウンロード</a>
+      </div>
+      <a class="github-mark" href="https://github.com/goonruntongue/hatching.js" target="_blank" rel="noreferrer" aria-label="GitHubで hatching.js を開く"></a>
+    </nav>
+
     <h1>hatching.js</h1>
-    <p>要素と同じ外寸の <code>::before</code> を、少しずらして背面に出すハッチングです。</p>
-    <section class="grid">
-      <article class="card coral hatch-a"><h2>45°</h2><p>基本の斜線</p></article>
-      <article class="card sky hatch-b"><h2>-45°</h2><p>細かい青い線</p></article>
-      <article class="card lemon hatch-c"><h2>0°</h2><p>水平ハッチ</p></article>
+    <p class="lead">カードをクリックすると、そのハッチングを作る jQuery コードを表示してコピーできます。</p>
+    <section class="grid" aria-label="ハッチング設定例">
+      <article class="card coral hatch-a is-selected" tabindex="0" role="button" aria-controls="code-example" data-example="coral"><h2>45°</h2><p>太めの赤い斜線</p></article>
+      <article class="card sky hatch-b" tabindex="0" role="button" aria-controls="code-example" data-example="sky"><h2>-45°</h2><p>細かい青い線</p></article>
+      <article class="card lemon hatch-c" tabindex="0" role="button" aria-controls="code-example" data-example="lemon"><h2>0°</h2><p>水平ハッチ</p></article>
     </section>
-    <button type="button" id="toggle">ハッチングを表示／非表示</button>
+
+    <section class="example" aria-live="polite">
+      <div class="example__top">
+        <h2 id="example-title">45° の設定コード</h2>
+        <button class="copy-code-button" type="button" aria-label="コードをコピー" title="コードをコピー">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 16H8V7h11v14Z"/></svg>
+        </button>
+      </div>
+      <pre id="code-example"><code></code></pre>
+    </section>
+    <div class="controls"><button type="button" id="toggle">ハッチングを表示／非表示</button></div>
   </main>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="../dist/jquery.hatching.js"></script>
   <script>
+    var examples = {
+      coral: { title: '45° の設定コード', code: "$('.hatch-a').hatching({\n  color: '#a12525',\n  width: '2px',\n  gap: '5px',\n  offsetX: '7px',\n  offsetY: '7px'\n});" },
+      sky: { title: '-45° の設定コード', code: "$('.hatch-b').hatching({\n  angle: '-45deg',\n  color: '#075d96',\n  width: '1px',\n  gap: '4px'\n});" },
+      lemon: { title: '0° の設定コード', code: "$('.hatch-c').hatching({\n  angle: '0deg',\n  color: '#8f6900',\n  width: '2px',\n  gap: '8px'\n});" }
+    };
+
     $('.hatch-a').hatching({ color: '#a12525', width: '2px', gap: '5px', offsetX: '7px', offsetY: '7px' });
     $('.hatch-b').hatching({ angle: '-45deg', color: '#075d96', width: '1px', gap: '4px' });
     $('.hatch-c').hatching({ angle: '0deg', color: '#8f6900', width: '2px', gap: '8px' });
-    $('#toggle').on('click', function () { $('.card').toggleClass('hatching-disabled'); });
+    $('.github-mark').hatching({ color: '#ffffff', width: '1px', gap: '3px', offsetX: '4px', offsetY: '4px' });
+
+    function showExample(key) {
+      var example = examples[key];
+      $('#example-title').text(example.title);
+      $('#code-example code').text(example.code);
+      $('.card').removeClass('is-selected');
+      $('.card[data-example="' + key + '"]').addClass('is-selected');
+    }
+
+    $('.card').on('click', function () { showExample($(this).data('example')); })
+      .on('keydown', function (event) {
+        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); showExample($(this).data('example')); }
+      });
+
+    $('.copy-code-button').on('click', function () {
+      var button = this;
+      var code = $('#code-example code').text();
+      function copied() {
+        button.setAttribute('aria-label', 'コピーしました');
+        button.title = 'コピーしました';
+        setTimeout(function () { button.setAttribute('aria-label', 'コードをコピー'); button.title = 'コードをコピー'; }, 1600);
+      }
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(code).then(copied);
+      } else {
+        var area = document.createElement('textarea');
+        area.value = code; document.body.appendChild(area); area.select(); document.execCommand('copy'); area.remove(); copied();
+      }
+    });
+
+    showExample('coral');
+    $('#toggle').on('click', function () { $('.card, .github-mark').toggleClass('hatching-disabled'); });
   </script>
 </body>
 </html>
