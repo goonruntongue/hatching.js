@@ -22,7 +22,7 @@
     variables.forEach(function (name) { self.original.variables[name] = self.element.style.getPropertyValue(name); });
     this.$element.addClass('hatching-source');
     if (this.$element.css('position') === 'static') { this.$element.css('position', 'relative'); }
-    if (this.$element.css('z-index') === 'auto') { this.$element.css('z-index', 0); }
+    this.$element.css('z-index', 'auto');
     this.$element.css('overflow', 'visible');
     if (this.options.className) { this.$element.addClass(this.options.className); }
     this.render();

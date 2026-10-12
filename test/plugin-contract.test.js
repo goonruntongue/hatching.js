@@ -17,6 +17,12 @@ test('uses source-level CSS variables rather than cloning content', () => {
   assert.match(source, /ResizeObserver/);
 });
 
+test('does not create a stacking context on the source element', () => {
+  assert.match(source, /css\('z-index', 'auto'\)/);
+  assert.match(css, /isolation: unset/);
+  assert.match(css, /z-index: auto/);
+});
+
 test('pseudo-element has no copied background, border, or text content', () => {
   assert.match(css, /\.hatching-source::before/);
   assert.match(css, /content: ''/);

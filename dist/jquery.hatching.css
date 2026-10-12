@@ -1,5 +1,6 @@
 .hatching-source {
-  isolation: isolate;
+  isolation: unset;
+  z-index: auto;
 }
 
 .hatching-source::before {

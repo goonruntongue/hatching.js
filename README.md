@@ -28,6 +28,8 @@ $('.target-element').hatching({
 
 プラグインはDOMを複製しません。対象要素の `::before` にハッチングだけを描画するため、元の `padding` と `border` を含む外寸を正確に引き継ぎ、テキスト内容・背景色・枠線は引き継ぎません。疑似要素は `background-color: transparent` と `border: none` に固定されています。
 
+`::before` を元要素より下へ出すため、初期化中は対象要素の `z-index` を `auto`、`isolation` を `unset` にします。これにより対象要素自身が新しいスタック文脈を作らず、`z-index: -1` のハッチングを同じスタック文脈の背面へ置けます。`destroy` 時にはインラインの `z-index` を元へ戻します。
+
 ## Options
 
 | Option | Default | Description |
