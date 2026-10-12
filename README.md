@@ -32,6 +32,17 @@ $('.target-element').hatching({
 
 ## Options
 
+### 線のグラデーション
+
+```js
+$('.target-element').hatching({
+  gradient: 'linear-gradient(to right, #333, rgba(51, 51, 51, 0.1))',
+  width: '2px', gap: '5px'
+});
+```
+
+左から右へ線だけを濃い色から薄い色へ変化させます。線の間は透明のままです。`to bottom` で上下方向、`transparent` で完全に透明になる終点を指定できます。カード・画像・文字の各モードに対応します。`gradient` が指定されている間は `color` と `gradientOverlay` より優先されます。`gradient: ''` で単色へ戻せます。従来の `gradientOverlay` は面全体への重ね描きなので、線だけのグラデーションには `gradient` を使用してください。
+
 ### 文字の輪郭に沿った影
 
 ```js
@@ -66,6 +77,7 @@ $('img.logo').hatching({ color: '#222', offsetX: '12px', offsetY: '16px' });
 | `gap` | `1.5px` | ハッチングの間隔 |
 | `angle` | `60deg` | ハッチングの角度 |
 | `gradientOverlay` | `''` | 上に重ねる CSS グラデーション |
+| `gradient` | `''` | 線だけに適用する CSS グラデーション（例: `linear-gradient(to right, #333, transparent)`） |
 | `offsetX` | `6px` | 疑似要素の横方向のずれ |
 | `offsetY` | `6px` | 疑似要素の縦方向のずれ |
 | `className` | `''` | 対象要素に追加するクラス名 |

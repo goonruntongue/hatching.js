@@ -58,7 +58,7 @@
     <h1>hatching.js</h1>
     <p class="lead">カードをクリックすると、そのハッチングを作る jQuery コードを表示してコピーできます。</p>
     <section class="grid" aria-label="ハッチング設定例">
-      <article class="card coral hatch-a is-selected" tabindex="0" role="button" aria-controls="code-example" data-example="coral"><h2>45°</h2><p>太めの赤い斜線</p></article>
+      <article class="card coral hatch-a is-selected" tabindex="0" role="button" aria-controls="code-example" data-example="coral"><h2>グラデーション</h2><p>左は濃く、右は薄い斜線</p></article>
       <article class="card sky hatch-b" tabindex="0" role="button" aria-controls="code-example" data-example="sky"><h2>-45°</h2><p>細かい青い線</p></article>
       <article class="card lemon hatch-c" tabindex="0" role="button" aria-controls="code-example" data-example="lemon"><h2>0°</h2><p>水平ハッチ</p></article>
     </section>
@@ -100,12 +100,12 @@
   <script src="../dist/jquery.hatching.js"></script>
   <script>
     var examples = {
-      coral: { title: '45° の設定コード', code: "$('.hatch-a').hatching({\n  color: '#a12525',\n  width: '2px',\n  gap: '5px',\n  offsetX: '7px',\n  offsetY: '7px'\n});" },
+      coral: { title: 'グラデーションの設定コード', code: "$('.hatch-a').hatching({\n  gradient: 'linear-gradient(to right, #711919, rgba(113, 25, 25, 0.12))',\n  angle: '45deg',\n  width: '2px',\n  gap: '5px',\n  offsetX: '7px',\n  offsetY: '7px'\n});" },
       sky: { title: '-45° の設定コード', code: "$('.hatch-b').hatching({\n  angle: '-45deg',\n  color: '#075d96',\n  width: '1px',\n  gap: '4px'\n});" },
       lemon: { title: '0° の設定コード', code: "$('.hatch-c').hatching({\n  angle: '0deg',\n  color: '#8f6900',\n  width: '2px',\n  gap: '8px'\n});" }
     };
 
-    $('.hatch-a').hatching({ color: '#a12525', width: '2px', gap: '5px', offsetX: '7px', offsetY: '7px' });
+    $('.hatch-a').hatching({ gradient: 'linear-gradient(to right, #711919, rgba(113, 25, 25, 0.12))', angle: '45deg', width: '2px', gap: '5px', offsetX: '7px', offsetY: '7px' });
     $('.hatch-b').hatching({ angle: '-45deg', color: '#075d96', width: '1px', gap: '4px' });
     $('.hatch-c').hatching({ angle: '0deg', color: '#8f6900', width: '2px', gap: '8px' });
     $('.github-mark img').hatching({ color: '#ffffff', width: '1px', gap: '3px', offsetX: '4px', offsetY: '4px' });
@@ -165,7 +165,7 @@
         var expected = section.hasClass('image-demo') ? '.hatch-image' : section.hasClass('text-demo') ? '.hatch-title' : { coral: '.hatch-a', sky: '.hatch-b', lemon: '.hatch-c' }[activeExample];
         if (!call || call[2] !== expected) { throw new Error('対象のセレクターは ' + expected + ' のまま、設定値を書き換えてください。'); }
         var options = {}, remaining = call[3].trim();
-        var allowed = { color: 'color', width: 'width', gap: 'width', angle: null, offsetX: 'left', offsetY: 'top', gradientOverlay: 'background-image', mode: null };
+        var allowed = { color: 'color', width: 'width', gap: 'width', angle: null, offsetX: 'left', offsetY: 'top', gradient: 'background-image', gradientOverlay: 'background-image', mode: null };
         while (remaining) {
           var item = remaining.match(/^\s*([a-zA-Z]+)\s*:\s*(['"])((?:\\.|(?!\2)[^\\])*)\2\s*(,|$)/);
           if (!item || !Object.prototype.hasOwnProperty.call(allowed, item[1])) { throw new Error('設定名と引用符付きの値を確認してください。例: gap: \'6px\''); }
