@@ -1,0 +1,36 @@
+{
+  "name": "@goonruntongue/hatching-vanilla",
+  "version": "1.0.0",
+  "description": "A dependency-free JavaScript library that adds hatched (diagonal line) offset shadows to boxes, images, and text.",
+  "main": "dist/hatching-vanilla.js",
+  "browser": "dist/hatching-vanilla.js",
+  "style": "dist/hatching-vanilla.css",
+  "jsdelivr": "dist/hatching-vanilla.min.js",
+  "unpkg": "dist/hatching-vanilla.min.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "hatching",
+    "shadow",
+    "overlay",
+    "css",
+    "vanilla-javascript",
+    "dependency-free"
+  ],
+  "author": "Katsuyori Murakami",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/goonruntongue/hatching.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/goonruntongue/hatching.js/issues"
+  },
+  "homepage": "https://goonruntongue.github.io/hatching.js/demo/"
+}

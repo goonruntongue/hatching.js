@@ -1,12 +1,54 @@
 {
-  "name": "hatching.js",
-  "version": "1.1.0",
-  "description": "A tiny jQuery plugin for adding configurable hatching overlays to elements.",
+  "name": "@goonruntongue/hatching",
+  "version": "1.2.0",
+  "description": "A tiny jQuery plugin that adds hatched (diagonal line) offset shadows to boxes, images, and text.",
   "main": "dist/jquery.hatching.js",
-  "keywords": ["jquery", "plugin", "hatching", "overlay", "css"],
+  "browser": "dist/jquery.hatching.js",
+  "style": "dist/jquery.hatching.css",
+  "jsdelivr": "dist/jquery.hatching.min.js",
+  "unpkg": "dist/jquery.hatching.min.js",
+  "exports": {
+    ".": "./dist/jquery.hatching.js",
+    "./dist/jquery.hatching.js": "./dist/jquery.hatching.js",
+    "./dist/jquery.hatching.min.js": "./dist/jquery.hatching.min.js",
+    "./dist/jquery.hatching.css": "./dist/jquery.hatching.css"
+  },
+  "files": [
+    "dist/jquery.hatching.js",
+    "dist/jquery.hatching.min.js",
+    "dist/jquery.hatching.css",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node --test test/*.test.js"
+  },
+  "keywords": [
+    "jquery",
+    "plugin",
+    "hatching",
+    "shadow",
+    "overlay",
+    "css"
+  ],
+  "author": "Katsuyori Murakami",
   "license": "MIT",
-  "repository": { "type": "git", "url": "https://github.com/goonruntongue/hatching.js.git" },
-  "peerDependencies": { "jquery": ">=1.9.0" },
-  "files": ["dist", "README.md", "LICENSE"],
-  "scripts": { "test": "node --test test/*.test.js" }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/goonruntongue/hatching.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/goonruntongue/hatching.js/issues"
+  },
+  "homepage": "https://goonruntongue.github.io/hatching.js/demo/",
+  "peerDependencies": {
+    "jquery": ">=1.9.0"
+  },
+  "devDependencies": {
+    "terser": "^5.31.0"
+  }
 }

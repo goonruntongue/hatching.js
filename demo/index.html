@@ -21,12 +21,24 @@
     .github-mark:hover > *, .github-mark:focus-visible > * { filter: invert(1); }
     h1 { margin: 0 0 8px; font-size: clamp(2rem, 7vw, 4rem); letter-spacing: -.06em; }
     .lead { color: #5a554d; }
+    .edition-switch { display: inline-flex; margin-top: 8px; padding: 4px; border: 3px solid #202020; border-radius: 12px; background: #fffdfa; }
+    .edition-switch button { padding: 9px 16px; border: 0; border-radius: 7px; background: transparent; color: inherit; cursor: pointer; font: inherit; font-weight: 700; font-size: .9rem; }
+    .edition-switch button[aria-pressed="true"] { background: #202020; color: #fffdfa; }
+    .edition-switch button:focus-visible { outline: 2px solid #075d96; outline-offset: 2px; }
+    body[data-edition="jquery"] .only-vanilla, body[data-edition="vanilla"] .only-jquery { display: none; }
+    .install { margin-top: 36px; padding: 22px; border: 3px solid #202020; border-radius: 18px; background: #fffdfa; }
+    .install h2 { margin: 0 0 6px; font-size: 1.3rem; }
+    .install h3 { margin: 22px 0 0; font-size: 1rem; }
+    .install p { margin: 6px 0 0; color: #5a554d; }
+    .snippet { position: relative; }
+    .snippet pre { padding-right: 68px; white-space: pre-wrap; word-break: break-all; }
+    .snippet .copy-code-button { position: absolute; top: 10px; right: 10px; color: #fffdfa; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; margin-top: 26px; }
     .card { top: 0; min-height: 190px; padding: 24px; border: 3px solid #202020; border-radius: 18px; background: #fffdfa; cursor: pointer; transition: top .15s ease; -webkit-tap-highlight-color: transparent; }
     .card:hover, .card:focus-visible, .card.is-selected { top: -6px; outline: none; }
     .card:active { top: -3px; }
     @media (prefers-reduced-motion: reduce) { .card { transition: none; } }
-    .code-editor { display: block; width: 100%; min-height: 230px; margin-top: 16px; padding: 18px; resize: vertical; border: 1px solid #777; border-radius: 10px; background: #101010; color: #d9f7d2; font: .9rem/1.65 ui-monospace, Consolas, monospace; tab-size: 2; }
+    .code-editor { display: block; width: 100%; margin-top: 16px; padding: 18px; resize: vertical; border: 1px solid #777; border-radius: 10px; background: #101010; color: #d9f7d2; font: .9rem/1.65 ui-monospace, Consolas, monospace; tab-size: 2; }
     .editor-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
     .copy-text-code { padding: 10px 16px; border: 1px solid currentColor; border-radius: 8px; cursor: pointer; font: inherit; }
     .editor-status { font-size: .9rem; }
@@ -46,21 +58,29 @@
     pre { margin: 16px 0 0; padding: 18px; overflow-x: auto; border-radius: 10px; background: #101010; color: #d9f7d2; font: 600 .9rem/1.65 ui-monospace, SFMono-Regular, Consolas, monospace; }
     .controls { margin-top: 28px; }
     .controls button { padding: 12px 18px; border: 2px solid #202020; border-radius: 8px; background: #fffdfa; cursor: pointer; font: inherit; font-weight: 700; }
-    @media (max-width: 560px) { body { padding: 18px; } .site-menu { align-items: flex-start; } .site-menu__links { flex-direction: column; } }
+    @media (max-width: 560px) { body { padding: 18px; } .site-menu { align-items: flex-start; } .site-menu__links { flex-direction: column; } .edition-switch { display: flex; } .edition-switch button { flex: 1; } }
   </style>
 </head>
-<body>
+<body data-edition="jquery">
   <main>
     <nav class="site-menu" aria-label="プラグインメニュー">
       <div class="site-menu__links">
         <a href="https://github.com/goonruntongue/hatching.js" target="_blank" rel="noreferrer">GitHub</a>
-        <a href="../dist/jquery.hatching.js" download="jquery.hatching.js">プラグインをダウンロード</a>
+        <a class="only-jquery" href="../dist/jquery.hatching.min.js" download="jquery.hatching.min.js">jQuery版をダウンロード</a>
+        <a class="only-vanilla" href="../dist/hatching-vanilla.min.js" download="hatching-vanilla.min.js">Vanilla版をダウンロード</a>
+        <a class="only-jquery" href="../dist/jquery.hatching.css" download="jquery.hatching.css">CSS</a>
+        <a class="only-vanilla" href="../dist/hatching-vanilla.css" download="hatching-vanilla.css">CSS</a>
       </div>
       <a class="github-mark" href="https://github.com/goonruntongue/hatching.js" target="_blank" rel="noreferrer" aria-label="GitHubで hatching.js を開く"><img src="github-white.svg" alt="" width="34" height="34"></a>
     </nav>
 
     <h1>hatching.js</h1>
-    <p class="lead">カードをクリックすると、そのハッチングを作る jQuery コードを表示してコピーできます。</p>
+    <p class="lead">要素・画像・文字の背面に、斜線ハッチングの影を付ける小さなライブラリです。jQuery プラグイン版と、jQuery なしで動く Vanilla JS 版があり、どちらも同じオプションで同じ見た目になります。</p>
+    <div class="edition-switch" role="group" aria-label="表示するコードの種類">
+      <button type="button" data-edition="jquery" aria-pressed="true">jQuery 版</button>
+      <button type="button" data-edition="vanilla" aria-pressed="false">Vanilla JS 版（jQuery なし）</button>
+    </div>
+    <p class="lead">切り替えると、このページのハッチングとコードが選んだ版に変わります。カードをクリックすると、そのハッチングを作るコードを表示してコピーできます。</p>
     <section class="grid" aria-label="ハッチング設定例">
       <article class="card coral hatch-a is-selected" tabindex="0" role="button" aria-controls="code-example" data-example="coral"><h2>グラデーション</h2><p>左は濃く、右は薄い斜線</p></article>
       <article class="card sky hatch-b" tabindex="0" role="button" aria-controls="code-example" data-example="sky"><h2>-45°</h2><p>細かい青い線</p></article>
@@ -74,7 +94,7 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 16H8V7h11v14Z"/></svg>
         </button>
       </div>
-      <textarea id="code-example" class="code-editor" aria-label="カードのjQueryコード" spellcheck="false"></textarea>
+      <textarea id="code-example" class="code-editor" aria-label="カードのコード" spellcheck="false"></textarea>
       <div class="editor-actions"><span class="editor-status" role="status"></span></div>
     </section>
 
@@ -82,9 +102,12 @@
       <h2>画像の輪郭にも</h2>
       <img class="hatch-image" src="teacup-white.png" alt="白いティーカップのシルエットに輪郭に沿ったハッチングの影" width="1024" height="512">
       <pre><code>$('.hatch-image').hatching({
-  color: '#202020', angle: '150deg',
-  width: '1px', gap: '6px',
-  offsetX: '12px', offsetY: '16px'
+  color: '#202020',
+  angle: '150deg',
+  width: '1px',
+  gap: '6px',
+  offsetX: '12px',
+  offsetY: '16px'
 });</code></pre>
     </section>
     <section class="text-demo">
@@ -92,16 +115,34 @@
       <p class="hatch-title">文字にハッチング Hatching</p>
       <pre><code>$('.hatch-title').hatching({
   mode: 'text',
-  color: '#202020', angle: '135deg',
-  width: '1px', gap: '3px',
-  offsetX: '5px', offsetY: '6px'
+  color: '#202020',
+  angle: '135deg',
+  width: '1px',
+  gap: '3px',
+  offsetX: '5px',
+  offsetY: '6px'
 });</code></pre>
       <button class="copy-text-code" type="button">文字のコードをコピー</button>
+    </section>
+    <section class="install" aria-labelledby="install-title">
+      <h2 id="install-title">インストール</h2>
+      <p class="only-jquery">jQuery 版は、jQuery を先に読み込んでから使います。</p>
+      <p class="only-vanilla">Vanilla JS 版は、jQuery を読み込まずに単体で動きます。</p>
+      <h3>CDN で読み込む</h3>
+      <div class="snippet only-jquery"><pre><code>&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@goonruntongue/hatching@1/dist/jquery.hatching.css"&gt;
+&lt;script src="https://code.jquery.com/jquery-3.7.1.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/@goonruntongue/hatching@1/dist/jquery.hatching.min.js"&gt;&lt;/script&gt;</code></pre></div>
+      <div class="snippet only-vanilla"><pre><code>&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@goonruntongue/hatching-vanilla@1/dist/hatching-vanilla.css"&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/@goonruntongue/hatching-vanilla@1/dist/hatching-vanilla.min.js"&gt;&lt;/script&gt;</code></pre></div>
+      <h3>npm でインストールする</h3>
+      <div class="snippet only-jquery"><pre><code>npm install @goonruntongue/hatching jquery</code></pre></div>
+      <div class="snippet only-vanilla"><pre><code>npm install @goonruntongue/hatching-vanilla</code></pre></div>
     </section>
     <div class="controls"><button type="button" id="toggle">ハッチングを表示／非表示</button></div>
   </main>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="../dist/jquery.hatching.js"></script>
+  <script src="../dist/hatching-vanilla.js"></script>
   <script>
     var examples = {
       coral: { title: 'グラデーションの設定コード', code: "$('.hatch-a').hatching({\n  gradient: 'linear-gradient(to right, #711919, rgba(113, 25, 25, 0.12))',\n  angle: '45deg',\n  width: '2px',\n  gap: '5px',\n  offsetX: '7px',\n  offsetY: '7px'\n});" },
@@ -109,17 +150,56 @@
       lemon: { title: '0° の設定コード', code: "$('.hatch-c').hatching({\n  angle: '0deg',\n  color: '#8f6900',\n  width: '2px',\n  gap: '8px'\n});" }
     };
 
-    $('.hatch-a').hatching({ gradient: 'linear-gradient(to right, #711919, rgba(113, 25, 25, 0.12))', angle: '45deg', width: '2px', gap: '5px', offsetX: '7px', offsetY: '7px' });
-    $('.hatch-b').hatching({ angle: '-45deg', color: '#075d96', width: '1px', gap: '4px' });
-    $('.hatch-c').hatching({ angle: '0deg', color: '#8f6900', width: '2px', gap: '8px' });
-    $('.github-mark img').hatching({ color: '#ffffff', width: '1px', gap: '3px', offsetX: '4px', offsetY: '4px' });
-    $('.hatch-image').hatching({ color: '#202020', angle: '150deg', width: '1px', gap: '6px', offsetX: '12px', offsetY: '16px' });
-    $('.hatch-title').hatching({ mode: 'text', color: '#202020', angle: '135deg', width: '1px', gap: '3px', offsetX: '5px', offsetY: '6px' });
+    // The page draws every hatching with the selected edition, so both can be compared live.
+    var edition = 'jquery';
+    var targets = ['.hatch-a', '.hatch-b', '.hatch-c', '.github-mark img', '.hatch-image', '.hatch-title'];
+    function applyHatching(selector, options) {
+      if (edition === 'jquery') { $(selector).hatching(options); } else { Hatching.apply(selector, options); }
+    }
+
+    applyHatching('.hatch-a', { gradient: 'linear-gradient(to right, #711919, rgba(113, 25, 25, 0.12))', angle: '45deg', width: '2px', gap: '5px', offsetX: '7px', offsetY: '7px' });
+    applyHatching('.hatch-b', { angle: '-45deg', color: '#075d96', width: '1px', gap: '4px' });
+    applyHatching('.hatch-c', { angle: '0deg', color: '#8f6900', width: '2px', gap: '8px' });
+    applyHatching('.github-mark img', { color: '#ffffff', width: '1px', gap: '3px', offsetX: '4px', offsetY: '4px' });
+    applyHatching('.hatch-image', { color: '#202020', angle: '150deg', width: '1px', gap: '6px', offsetX: '12px', offsetY: '16px' });
+    applyHatching('.hatch-title', { mode: 'text', color: '#202020', angle: '135deg', width: '1px', gap: '3px', offsetX: '5px', offsetY: '6px' });
+
+    // Rewrites the call around the options; the options themselves are identical in both editions.
+    function convertCode(code, to) {
+      return to === 'vanilla'
+        ? code.replace(/\$\(\s*(['"])(.+?)\1\s*\)\.hatching\(\s*/, "Hatching.apply('$2', ")
+        : code.replace(/Hatching\.apply\(\s*(['"])(.+?)\1\s*,\s*/, "$$('$2').hatching(");
+    }
+
+    function setEdition(next) {
+      if (next === edition) { return; }
+      var hidden = $('.hatching-source').hasClass('hatching-disabled');
+      var saved = targets.map(function (selector) {
+        var options = edition === 'jquery' ? $(selector).hatching('option') : Hatching.option(selector);
+        if (edition === 'jquery') { $(selector).hatching('destroy'); } else { Hatching.destroy(selector); }
+        return options;
+      });
+      edition = next;
+      targets.forEach(function (selector, index) { applyHatching(selector, saved[index]); });
+      $('.hatching-source').toggleClass('hatching-disabled', hidden);
+      Object.keys(examples).forEach(function (key) { examples[key].code = convertCode(examples[key].code, next); });
+      $('.code-editor').each(function () { this.value = convertCode(this.value, next); });
+      document.body.setAttribute('data-edition', next);
+      $('.edition-switch button').each(function () { this.setAttribute('aria-pressed', String(this.getAttribute('data-edition') === next)); });
+    }
+    $('.edition-switch button').on('click', function () { setEdition(this.getAttribute('data-edition')); });
+
+    // Size an editor to its current code; lines added afterwards scroll.
+    function fitEditor(editor) {
+      editor.style.height = 'auto';
+      editor.style.height = editor.scrollHeight + editor.offsetHeight - editor.clientHeight + 1 + 'px'; // +1 covers fractional line heights
+    }
 
     function showExample(key) {
       var example = examples[key];
       $('#example-title').text(example.title);
       $('#code-example').val(example.code);
+      fitEditor($('#code-example')[0]);
       activeExample = key;
       $('.example .editor-status').text('コードを書き換えるとすぐに反映されます。');
       $('.card').removeClass('is-selected');
@@ -134,7 +214,8 @@
 
     $('.copy-code-button, .copy-text-code').on('click', function () {
       var button = this;
-      var code = $(this).closest('section').find('.code-editor').val();
+      var snippet = $(this).closest('.snippet');
+      var code = snippet.length ? snippet.find('pre').text() : $(this).closest('section').find('.code-editor').val();
       function copied() {
         button.setAttribute('aria-label', 'コピーしました');
         button.title = 'コピーしました';
@@ -153,11 +234,12 @@
     $('.image-demo, .text-demo').each(function () {
       var section = $(this);
       var pre = section.find('pre');
-      $('<textarea class="code-editor" spellcheck="false"></textarea>').attr('aria-label', section.find('h2').text() + 'のjQueryコード').val(pre.text()).replaceAll(pre);
+      $('<textarea class="code-editor" spellcheck="false"></textarea>').attr('aria-label', section.find('h2').text() + 'のコード').val(pre.text()).replaceAll(pre).each(function () { fitEditor(this); });
       var actions = $('<div class="editor-actions"><span class="editor-status" role="status"></span></div>').appendTo(section);
       if (section.find('.copy-text-code').length) { section.find('.copy-text-code').prependTo(actions); }
       else { $('.example .copy-code-button').clone(true).prependTo(actions); }
     });
+    $('.snippet').each(function () { $('.example .copy-code-button').clone(true).appendTo(this); });
     // Accept one hatching call with string options, without executing arbitrary JavaScript.
     // Applied on every edit; an invalid draft keeps the last valid hatching.
     $(document).on('input', '.code-editor', function () {
@@ -165,7 +247,9 @@
       var status = section.find('.editor-status');
       try {
         var code = section.find('.code-editor').val();
-        var call = code.match(/^\s*\$\(\s*(['"])(\.[\w-]+)\1\s*\)\.hatching\(\s*\{([\s\S]*)\}\s*\)\s*;?\s*$/);
+        var call = code.match(edition === 'jquery'
+          ? /^\s*\$\(\s*(['"])(\.[\w-]+)\1\s*\)\.hatching\(\s*\{([\s\S]*)\}\s*\)\s*;?\s*$/
+          : /^\s*Hatching\.apply\(\s*(['"])(\.[\w-]+)\1\s*,\s*\{([\s\S]*)\}\s*\)\s*;?\s*$/);
         var expected = section.hasClass('image-demo') ? '.hatch-image' : section.hasClass('text-demo') ? '.hatch-title' : { coral: '.hatch-a', sky: '.hatch-b', lemon: '.hatch-c' }[activeExample];
         if (!call || call[2] !== expected) { throw new Error('対象のセレクターは ' + expected + ' のまま、設定値を書き換えてください。'); }
         // Empty values fall back to the plugin defaults, so deleting a line resets that setting.
@@ -179,7 +263,7 @@
           options[key] = value;
           remaining = remaining.slice(item[0].length).trim();
         }
-        $(expected).hatching(options);
+        applyHatching(expected, options);
         status.text('反映しました。');
       } catch (error) { status.text(error.message); }
     });

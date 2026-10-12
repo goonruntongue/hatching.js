@@ -1,0 +1,96 @@
+.hatching-source {
+  isolation: unset;
+  z-index: auto;
+}
+
+.hatching-source::before {
+  content: '';
+  position: absolute;
+  top: calc(-1 * var(--hatching-border-top, 0px));
+  right: calc(-1 * var(--hatching-border-right, 0px));
+  bottom: calc(-1 * var(--hatching-border-bottom, 0px));
+  left: calc(-1 * var(--hatching-border-left, 0px));
+  z-index: -1;
+  box-sizing: border-box;
+  display: block;
+  pointer-events: none;
+  border: none !important;
+  border-radius: inherit;
+  background-color: transparent !important;
+  background-image: var(--hatching-gradient, none), repeating-linear-gradient(
+    var(--hatching-angle, 60deg),
+    var(--hatching-color, #333333) 0,
+    var(--hatching-color, #333333) var(--hatching-width, 1px),
+    transparent var(--hatching-width, 1px),
+    transparent calc(var(--hatching-width, 1px) + var(--hatching-gap, 1.5px))
+  );
+  transform: translate(var(--hatching-offset-x, 6px), var(--hatching-offset-y, 6px));
+}
+
+.hatching-source.hatching-disabled::before {
+  display: none;
+}
+
+/* A transparent wrapper groups the image and its masked shadow together. */
+.hatching-image.hatching-source {
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+  isolation: isolate;
+}
+.hatching-image > img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.hatching-image::before {
+  -webkit-mask: var(--hatching-image) center / 100% 100% no-repeat;
+  mask: var(--hatching-image) center / 100% 100% no-repeat;
+  mask-mode: alpha;
+}
+
+/* The background paints first, then the shadow, then the original glyphs. */
+.hatching-text.hatching-source {
+  isolation: isolate;
+}
+.hatching-text::before {
+  content: attr(data-hatching-text);
+  content: attr(data-hatching-text) / '';
+  inset: 0;
+  padding: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+  line-height: inherit;
+  text-align: inherit;
+  text-indent: inherit;
+  text-transform: inherit;
+  white-space: inherit;
+  overflow-wrap: inherit;
+  word-break: inherit;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Color only the strokes; preserve transparent gaps and image/text contours. */
+.hatching-gradient::before {
+  --hatching-strokes: repeating-linear-gradient(
+    var(--hatching-angle, 60deg),
+    #000 0, #000 var(--hatching-width, 1px),
+    transparent var(--hatching-width, 1px),
+    transparent calc(var(--hatching-width, 1px) + var(--hatching-gap, 1.5px))
+  );
+  background-image: var(--hatching-line-gradient);
+  -webkit-mask-image: var(--hatching-strokes);
+  mask-image: var(--hatching-strokes);
+}
+.hatching-image.hatching-gradient::before {
+  -webkit-mask-image: var(--hatching-image), var(--hatching-strokes);
+  mask-image: var(--hatching-image), var(--hatching-strokes);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
