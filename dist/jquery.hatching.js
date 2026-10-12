@@ -5,7 +5,7 @@
 
   var pluginName = 'hatching';
   var dataKey = 'plugin.' + pluginName;
-  var defaults = { color: '#333333', width: '1px', gap: '1.5px', angle: '60deg', gradientOverlay: '', offsetX: '6px', offsetY: '6px', className: '' };
+  var defaults = { mode: 'box', color: '#333333', width: '1px', gap: '1.5px', angle: '60deg', gradientOverlay: '', offsetX: '6px', offsetY: '6px', className: '' };
   var variables = ['--hatching-color', '--hatching-width', '--hatching-gap', '--hatching-angle', '--hatching-gradient', '--hatching-offset-x', '--hatching-offset-y', '--hatching-border-top', '--hatching-border-right', '--hatching-border-bottom', '--hatching-border-left'];
 
   function Hatching(element, options) {
@@ -23,6 +23,10 @@
     this.options = $.extend({}, defaults, options);
     this.original = { position: element.style.position, zIndex: element.style.zIndex, overflow: element.style.overflow, variables: {} };
     this.observer = null;
+    this.originalTextAttribute = element.getAttribute('data-hatching-text');
+    var self = this;
+    this.textObserver = new MutationObserver(function () { self.render(); });
+    this.textObserver.observe(element, { childList: true, characterData: true, subtree: true });
     this.init();
     if (this.image) {
       var self = this;
@@ -49,6 +53,15 @@
   Hatching.prototype.render = function () {
     var o = this.options;
     var style = window.getComputedStyle(this.element);
+    var textMode = !this.image && o.mode === 'text';
+    this.$element.toggleClass('hatching-text', textMode);
+    if (textMode) {
+      this.element.setAttribute('data-hatching-text', this.element.textContent);
+    } else if (this.originalTextAttribute === null) {
+      this.element.removeAttribute('data-hatching-text');
+    } else {
+      this.element.setAttribute('data-hatching-text', this.originalTextAttribute);
+    }
     var values = {
       '--hatching-color': o.color || defaults.color,
       '--hatching-width': o.width || defaults.width,
@@ -81,7 +94,10 @@
   Hatching.prototype.destroy = function () {
     var self = this;
     if (this.observer) { this.observer.disconnect(); }
-    this.$element.removeClass('hatching-source hatching-disabled');
+    this.textObserver.disconnect();
+    this.$element.removeClass('hatching-source hatching-disabled hatching-text');
+    if (this.originalTextAttribute === null) { this.element.removeAttribute('data-hatching-text'); }
+    else { this.element.setAttribute('data-hatching-text', this.originalTextAttribute); }
     if (this.options.className) { this.$element.removeClass(this.options.className); }
     this.element.style.position = this.original.position;
     this.element.style.zIndex = this.original.zIndex;

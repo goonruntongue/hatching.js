@@ -48,3 +48,30 @@
   mask: var(--hatching-image) center / 100% 100% no-repeat;
   mask-mode: alpha;
 }
+
+/* The background paints first, then the shadow, then the original glyphs. */
+.hatching-text.hatching-source {
+  isolation: isolate;
+}
+.hatching-text::before {
+  content: attr(data-hatching-text);
+  content: attr(data-hatching-text) / '';
+  inset: 0;
+  padding: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+  line-height: inherit;
+  text-align: inherit;
+  text-indent: inherit;
+  text-transform: inherit;
+  white-space: inherit;
+  overflow-wrap: inherit;
+  word-break: inherit;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
