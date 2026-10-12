@@ -12,9 +12,9 @@
     h1 { margin: 0 0 8px; font-size: clamp(2rem, 7vw, 4rem); letter-spacing: -.06em; }
     p { color: #5a554d; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; margin-top: 26px; }
-    .card { min-height: 190px; padding: 24px; overflow: hidden; border: 3px solid #202020; border-radius: 18px; background: #fffdfa; }
-    .card h2 { margin: 0; position: relative; z-index: 2; }
-    .card p { position: relative; z-index: 2; margin-bottom: 0; }
+    .card { min-height: 190px; padding: 24px; border: 3px solid #202020; border-radius: 18px; background: #fffdfa; }
+    .card h2 { margin: 0; }
+    .card p { margin-bottom: 0; }
     .coral { background: #ff8b73; } .sky { background: #89cdf2; } .lemon { background: #ffdc5c; }
     button { margin-top: 28px; padding: 12px 18px; border: 2px solid #202020; border-radius: 8px; background: #fffdfa; cursor: pointer; font: inherit; font-weight: 700; }
   </style>
@@ -22,7 +22,7 @@
 <body>
   <main>
     <h1>hatching.js</h1>
-    <p>任意の要素に、CSSだけで描くハッチングのオーバーレイを追加します。</p>
+    <p>要素と同じ外寸の <code>::before</code> を、少しずらして背面に出すハッチングです。</p>
     <section class="grid">
       <article class="card coral hatch-a"><h2>45°</h2><p>基本の斜線</p></article>
       <article class="card sky hatch-b"><h2>-45°</h2><p>細かい青い線</p></article>
@@ -36,7 +36,7 @@
     $('.hatch-a').hatching({ color: '#a12525', width: '2px', gap: '5px', offsetX: '7px', offsetY: '7px' });
     $('.hatch-b').hatching({ angle: '-45deg', color: '#075d96', width: '1px', gap: '4px' });
     $('.hatch-c').hatching({ angle: '0deg', color: '#8f6900', width: '2px', gap: '8px' });
-    $('#toggle').on('click', function () { $('.hatching-shadow').toggle(); });
+    $('#toggle').on('click', function () { $('.card').toggleClass('hatching-disabled'); });
   </script>
 </body>
 </html>

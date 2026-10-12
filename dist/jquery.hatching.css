@@ -1,3 +1,31 @@
-.hatching-shadow {
+.hatching-source {
+  isolation: isolate;
+}
+
+.hatching-source::before {
+  content: '';
+  position: absolute;
+  top: calc(-1 * var(--hatching-border-top, 0px));
+  right: calc(-1 * var(--hatching-border-right, 0px));
+  bottom: calc(-1 * var(--hatching-border-bottom, 0px));
+  left: calc(-1 * var(--hatching-border-left, 0px));
+  z-index: -1;
   box-sizing: border-box;
+  display: block;
+  pointer-events: none;
+  border: none !important;
+  border-radius: inherit;
+  background-color: transparent !important;
+  background-image: var(--hatching-gradient, none), repeating-linear-gradient(
+    var(--hatching-angle, 60deg),
+    var(--hatching-color, #333333) 0,
+    var(--hatching-color, #333333) var(--hatching-width, 1px),
+    transparent var(--hatching-width, 1px),
+    transparent calc(var(--hatching-width, 1px) + var(--hatching-gap, 1.5px))
+  );
+  transform: translate(var(--hatching-offset-x, 6px), var(--hatching-offset-y, 6px));
+}
+
+.hatching-source.hatching-disabled::before {
+  display: none;
 }

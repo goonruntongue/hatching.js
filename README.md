@@ -1,6 +1,6 @@
 # hatching.js
 
-任意の要素を複製し、少しだけずらして背面に置くことでハッチングの影を作る、小さな jQuery プラグインです。CSS の `repeating-linear-gradient` で軽く描画します。
+対象要素の `::before` 疑似要素を、元の要素と同じ外寸で少しだけずらして背面に置く、小さな jQuery プラグインです。CSS の `repeating-linear-gradient` で軽く描画します。
 
 ## Demo
 
@@ -26,7 +26,7 @@ $('.target-element').hatching({
 });
 ```
 
-プラグインは対象要素を複製し、クリックを妨げない背面要素を追加します。`position: static` の要素だけ、自動的に `position: relative` にします。角丸も引き継ぎます。背景色を持つカード、ボタン、見出しなどでハッチングの縁取り・影として使えます。
+プラグインはDOMを複製しません。対象要素の `::before` にハッチングだけを描画するため、元の `padding` と `border` を含む外寸を正確に引き継ぎ、テキスト内容・背景色・枠線は引き継ぎません。疑似要素は `background-color: transparent` と `border: none` に固定されています。
 
 ## Options
 
@@ -37,9 +37,9 @@ $('.target-element').hatching({
 | `gap` | `1.5px` | ハッチングの間隔 |
 | `angle` | `60deg` | ハッチングの角度 |
 | `gradientOverlay` | `''` | 上に重ねる CSS グラデーション |
-| `offsetX` | `6px` | 背面コピーの横方向のずれ |
-| `offsetY` | `6px` | 背面コピーの縦方向のずれ |
-| `className` | `''` | 背面コピーに追加するクラス名 |
+| `offsetX` | `6px` | 疑似要素の横方向のずれ |
+| `offsetY` | `6px` | 疑似要素の縦方向のずれ |
+| `className` | `''` | 対象要素に追加するクラス名 |
 
 ## Methods
 
@@ -50,7 +50,7 @@ $('.target-element').hatching({ color: '#f04', gap: '12px' });
 // 現在の設定を取得する
 const options = $('.target-element').hatching('option');
 
-// 背面コピーを削除する
+// ハッチング用のクラスと設定を削除する
 $('.target-element').hatching('destroy');
 ```
 
